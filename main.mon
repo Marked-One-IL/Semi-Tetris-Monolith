@@ -1,0 +1,55 @@
+import "std.mon"
+import "Random.mon"
+import "Game.mon"
+import "Window.mon"
+import "Music.mon"
+
+def main() -> int:
+    
+    Random_init()
+    game: ptr Game = malloc(sizeof Game) as ptr Game
+    Game_init(game)
+    Window_init(200, 400, "Tetris")
+	Music_play("Tetris Theme.wav")
+	
+    empty: Pixel = Window_convertColor(255, 255, 255)
+    while True:
+        Window_clear(empty)
+        
+        isW: bool = Window_isWPressed()
+        isA: bool = Window_isAPressed()
+        isS: bool = Window_isSPressed()
+        isD: bool = Window_isDPressed()
+        
+        if not Game_nextMove(game, isW, isA, isS, isD):
+            break
+        
+        y: int = 0
+        x: int = 0
+		for y = 0, y < 20, y += 1:
+			for x = 0, x < 10, x += 1:
+				pixel: Pixel = game->axis[y][x] 
+				
+				if game->currentShape.p1.x == x and game->currentShape.p1.y == y:
+					pixel = game->currentShape.p1.pixel
+				elif game->currentShape.p2.x == x and game->currentShape.p2.y == y:
+					pixel = game->currentShape.p2.pixel
+				elif game->currentShape.p3.x == x and game->currentShape.p3.y == y:
+					pixel = game->currentShape.p3.pixel
+				elif game->currentShape.p4.x == x and game->currentShape.p4.y == y:
+					pixel = game->currentShape.p4.pixel
+
+				dy: int = 0
+				dx: int = 0
+				for dy = 0, dy < 20, dy += 1:
+					for dx = 0, dx < 20, dx += 1:
+						Window_set(x * 20 + dx, y * 20 + dy, pixel)
+
+        
+        Window_draw()
+        Window_sleep(150)
+    
+    free(game as ptr)
+    Window_destruct()
+    printf("Game over X(")
+    return 0

@@ -1,0 +1,16 @@
+typedef Color = int
+
+def_extern Window_init(width: int, height: int, name: ptr char):
+def_extern Window_isOpen() -> bool:
+def_extern Window_clear(color: Color):
+def_extern Window_set(x: int, y: int, color: Color):
+def_extern Window_draw():
+def_extern Window_sleep(milliseconds: int):
+def_extern Window_destruct():
+def_extern Window_convertColor(r: int, g: int, b: int) -> Color:
+def_extern Window_isWPressed() -> bool:
+def_extern Window_isAPressed() -> bool:
+def_extern Window_isSPressed() -> bool:
+def_extern Window_isDPressed() -> bool:
+def_extern Window_getWidth() -> int:
+def_extern Window_getHeight() -> int:

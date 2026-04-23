@@ -1,0 +1,180 @@
+import "Pixel.mon"
+import "Shape.mon"
+import "Random.mon"
+
+struct Game:
+    axis: [[Pixel : 10] : 20]
+    currentShape: Shape
+
+def Game_getRandomShape() -> Shape:
+    
+    empty: Pixel = Window_convertColor(255, 255, 255)
+    randomShape: int = Random_random(0, 6)
+    randomPixel: Pixel = Pixel_getRandomPixel()
+    shape: Shape = Shape{Point{0, 0, empty},
+                         Point{0, 0, empty},
+                         Point{0, 0, empty},
+                         Point{0, 0, empty},
+                         Point{0, 0, empty}, False}
+    
+    if randomShape == 0:
+        Shape_init(ref shape,
+			4, 0,
+			4, 1,
+			4, 2,
+			4, 3,
+			randomPixel, True, 4, 1)
+            
+    elif randomShape == 1:
+        Shape_init(ref shape,
+			4    , 0,
+			4 + 1, 0,
+			4    , 1,
+			4 + 1, 1,
+			randomPixel, True, -1, -1)
+    
+    elif randomShape == 2:
+        Shape_init(ref shape,
+			4    , 0,
+			4 + 1, 0,
+			4 + 2, 0,
+			4 + 1, 1,
+			randomPixel, True, 4 + 1, 1)
+            
+    elif randomShape == 3:
+        Shape_init(ref shape,
+			4    , 1,
+			4 + 1, 1,
+			4 + 1, 0,
+			4 + 2, 0,
+			randomPixel, True, 4 + 1, 1)
+            
+    elif randomShape == 4:
+        Shape_init(ref shape,
+			4    , 0,
+			4 + 1, 0,
+			4 + 1, 1,
+			4 + 2, 1,
+			randomPixel, True, 4 + 1, 1)
+            
+    elif randomShape == 5:
+        Shape_init(ref shape,
+			4    , 2,
+			4 + 1, 2,
+			4 + 1, 1,
+			4 + 1, 0,
+			randomPixel, True, 4 + 1, 1)
+            
+    elif randomShape == 6:
+        Shape_init(ref shape,
+			4    , 0,
+			4	 , 1,
+			4	 , 2,
+			4 + 1, 2,
+			randomPixel, True, 4, 1)
+            
+    return shape
+
+def Game_isOutbounds(self: ptr Game) -> bool:
+
+    return ((self->currentShape.p1.y >= 20)          or
+            (self->currentShape.p2.y >= 20)          or
+            (self->currentShape.p3.y >= 20)          or
+            (self->currentShape.p4.y >= 20)          or
+            (self->currentShape.p1.y < 0           ) or
+            (self->currentShape.p2.y < 0           ) or
+            (self->currentShape.p3.y < 0           ) or
+            (self->currentShape.p4.y < 0           ) or
+            
+            (self->currentShape.p1.x >= 10)          or
+            (self->currentShape.p2.x >= 10)          or
+            (self->currentShape.p3.x >= 10)          or
+            (self->currentShape.p4.x >= 10)          or
+            (self->currentShape.p1.x < 0           ) or
+            (self->currentShape.p2.x < 0           ) or
+            (self->currentShape.p3.x < 0           ) or
+            (self->currentShape.p4.x < 0           ))
+       
+def Game_isCollision(self: ptr Game) -> bool:
+
+    empty: Pixel = Window_convertColor(255, 255, 255)
+
+    return (self->axis[self->currentShape.p1.y][self->currentShape.p1.x] != empty or
+            self->axis[self->currentShape.p2.y][self->currentShape.p2.x] != empty or 
+            self->axis[self->currentShape.p3.y][self->currentShape.p3.x] != empty or 
+            self->axis[self->currentShape.p4.y][self->currentShape.p4.x] != empty)
+    
+def Game_init(self: ptr Game):
+
+    y: int = 0
+    x: int = 0
+    empty: Pixel = Window_convertColor(255, 255, 255)
+    
+    for y = 0, y < 20, y += 1:
+        for x = 0, x < 10, x += 1:
+            self->axis[y][x] = empty
+            
+    Shape_init(ref self->currentShape,
+        0, 0,
+        0, 0,
+        0, 0,
+        0, 0,
+        empty, False, -1, -1)
+        
+def Game_nextMove(self: ptr Game, isW: bool, isA: bool, isS: bool, isD: bool) -> bool:
+
+	if not self->currentShape.isActive:
+        self->currentShape = Game_getRandomShape()
+		if Game_isCollision(self):
+            return False # If there is collision after creating a new shape it means game over.
+
+    
+	tempShape: Shape = self->currentShape
+	if isW:
+        Shape_rotate(ref self->currentShape)
+	if isA:
+        Shape_moveLeft(ref self->currentShape)
+	if isS:
+        Shape_moveDown(ref self->currentShape)
+	if isD:
+        Shape_moveRight(ref self->currentShape)
+	if Game_isOutbounds(self) or Game_isCollision(self):
+        self->currentShape = tempShape
+
+	tempShape = self->currentShape
+	Shape_moveDown(ref self->currentShape)
+	if Game_isOutbounds(self) or Game_isCollision(self):
+    
+        empty: Pixel = Window_convertColor(255, 255, 255)
+		self->currentShape = tempShape
+		self->axis[tempShape.p1.y][tempShape.p1.x] = tempShape.p1.pixel
+		self->axis[tempShape.p2.y][tempShape.p2.x] = tempShape.p2.pixel
+		self->axis[tempShape.p3.y][tempShape.p3.x] = tempShape.p3.pixel
+		self->axis[tempShape.p4.y][tempShape.p4.x] = tempShape.p4.pixel
+		self->currentShape.isActive = False
+
+        y: int = 0
+		for y = 20 - 1, y >= 0, y -= 1:
+        
+			isFull: bool = True
+            x: int = 0
+			for x = 0, x < 10, x += 1:
+				if self->axis[y][x] == empty:
+					isFull = False
+					break
+
+			if isFull:
+                
+                yy: int = 0
+				for yy = y, yy > 0, yy -= 1:
+                    xx: int = 0
+					for xx = 0, xx < 10, xx += 1:  
+						self->axis[yy][xx] = self->axis[yy - 1][xx]
+                
+                xx: int = 0
+				for xx = 0, xx < 10, xx += 1:
+					self->axis[0][xx] = empty
+
+				y += 1
+
+	return True

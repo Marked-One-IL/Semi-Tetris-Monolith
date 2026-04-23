@@ -1,0 +1,7 @@
+import "std.mon"
+
+def Random_init():
+    srand(time(None))
+    
+def Random_random(from: int, to: int) -> int:
+    return from + rand() % (to - from + 1)

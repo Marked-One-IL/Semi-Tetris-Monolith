@@ -1,0 +1,27 @@
+import "Random.mon"
+import "Window.mon"
+
+typedef Pixel = int
+
+def Pixel_getRandomPixel() -> Pixel:
+
+    randomId: int = Random_random(0, 7)
+    
+    if randomId == 0:
+        return Window_convertColor(255, 0, 0) # RED
+    elif randomId == 1:
+        return Window_convertColor(255, 96, 208) # PINK
+    elif randomId == 2:
+        return Window_convertColor(160, 32, 255) # PURPLE
+    elif randomId == 3:
+        return Window_convertColor(0, 32, 255) # BLUE
+    elif randomId == 4:
+        return Window_convertColor(0, 192, 0) # GREEN
+    elif randomId == 5:
+        return Window_convertColor(255, 224, 32) # YELLOW
+    elif randomId == 6:
+        return Window_convertColor(255, 160, 16) # ORANGE
+    elif randomId == 7:
+        return Window_convertColor(160, 128, 96) # BROWN
+        
+    return Window_convertColor(255, 255, 255) # EMPTY 

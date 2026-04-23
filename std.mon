@@ -1,0 +1,25 @@
+def_extern printf(fmt: ptr char, ...) -> int:
+def_extern scanf(fmt: ptr char, ...) -> int:
+def_extern sqrtf(x: float) -> float:
+def_extern putchar(x: int) -> int:
+def_extern getchar() -> int:
+def_extern pow(base: float, exp: float) -> float:
+
+def_extern sin(x: float) -> float:
+def_extern cos(x: float) -> float:
+def_extern tan(x: float) -> float:
+
+
+
+typedef FILE = int
+def_extern fopen(filename: ptr char, mode: ptr char) -> ptr FILE:
+def_extern fprintf(file: ptr FILE, fmt: ptr char, ...) -> int:
+def_extern fclose(file: ptr FILE) -> int:
+
+def_extern srand(seed: int):
+def_extern time(idk: ptr) -> int: # Pass None
+def_extern rand() -> int:
+
+def_extern malloc(size: int) -> ptr:
+def_extern free(mem: ptr):
+def_extern system(command: ptr char) -> int:

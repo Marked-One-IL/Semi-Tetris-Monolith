@@ -1,0 +1,57 @@
+import "Point.mon"
+
+struct Shape:
+    p1: Point
+    p2: Point
+    p3: Point
+    p4: Point
+    pivot: Point
+    isActive: bool
+    
+def Shape_init(self: ptr Shape,
+               x1: int, y1: int,
+               x2: int, y2: int,
+               x3: int, y3: int,
+               x4: int, y4: int,
+               pixel: Pixel, state: bool, pX: int, pY: int):
+               
+    self->isActive = state
+	Point_init(ref self->p1, x1, y1, pixel)
+	Point_init(ref self->p2, x2, y2, pixel)
+	Point_init(ref self->p3, x3, y3, pixel)
+	Point_init(ref self->p4, x4, y4, pixel)
+	Point_init(ref self->pivot, pX, pY, pixel)
+    
+def Shape_moveDown(self: ptr Shape):
+
+	self->p1.y += 1
+	self->p2.y += 1
+	self->p3.y += 1
+	self->p4.y += 1
+    if self->pivot.y != -1:
+        self->pivot.y += 1
+
+def Shape_moveLeft(self: ptr Shape):
+
+    self->p1.x -= 1
+	self->p2.x -= 1
+	self->p3.x -= 1
+	self->p4.x -= 1
+    if self->pivot.x != -1:
+        self->pivot.x -= 1
+        
+def Shape_moveRight(self: ptr Shape):
+
+	self->p1.x += 1
+	self->p2.x += 1
+	self->p3.x += 1
+	self->p4.x += 1
+	if self->pivot.x != -1:
+        self->pivot.x += 1
+
+def Shape_rotate(self: ptr Shape):
+
+	Point_rotate(ref self->p1, ref self->pivot)
+	Point_rotate(ref self->p2, ref self->pivot)
+	Point_rotate(ref self->p3, ref self->pivot)
+	Point_rotate(ref self->p4, ref self->pivot)

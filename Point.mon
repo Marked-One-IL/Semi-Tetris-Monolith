@@ -1,0 +1,26 @@
+import "Pixel.mon"
+
+struct Point:
+    x: int
+    y: int
+    pixel: Pixel
+    
+def Point_init(self: ptr Point, x: int, y: int, pixel: Pixel):
+
+    self->x = x
+    self->y = y
+    self->pixel = pixel
+    
+def Point_rotate(self: ptr Point, pivot: ptr Point):
+
+    if pivot->x == -1 or pivot->y == -1:
+        return
+     
+    relX: int = self->x - pivot->x
+    relY: int = self->y - pivot->y
+    
+    rotatedX: int = -relY
+    rotatedY: int = relX
+    
+    self->x = rotatedX + pivot->x
+    self->y = rotatedY + pivot->y
