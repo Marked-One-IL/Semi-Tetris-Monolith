@@ -1,0 +1,2 @@
+compileAndRun.bat linguist-vendored
+compileAndRunKeepTemps.bat linguist-vendored

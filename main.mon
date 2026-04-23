@@ -13,7 +13,7 @@ def main() -> int:
 	Music_play("Tetris Theme.wav")
 	
     empty: Pixel = Window_convertColor(255, 255, 255)
-    while True:
+    while Window_isOpen():
         Window_clear(empty)
         
         isW: bool = Window_isWPressed()
